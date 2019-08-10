@@ -1,0 +1,21 @@
+{
+  "schemaVersion": 1,
+  "id": "fatxporbs",
+  "version": "${version}",
+  "name": "Fat Experience Orbs",
+  "description": "Makes XP orbs combine together.",
+  "authors": [
+    "NinjaPhenix"
+  ],
+  "license": "MIT",
+  "environment": "*",
+  "mixins": [
+    {
+      "config": "fatxporbs.mixins.json",
+      "environment": "*"
+    }
+  ],
+  "depends": {
+    "fabricloader": ">=0.4.0"
+  }
+}
