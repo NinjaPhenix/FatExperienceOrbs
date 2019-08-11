@@ -47,16 +47,14 @@ public abstract class ExperienceOrbEntityMixin extends Entity
                     if (entity.getEntityId() != this.getEntityId() && !entity.removed)
                     {
                         this.amount += entity.getExperienceAmount();
-                        this.health = 5;
-                        this.orbAge = 0;
                         entity.remove();
                     }
                 }
                 if(amount != old)
                 {
                     Entity newOrb = new ExperienceOrbEntity(world, pos.getX(), pos.getY(), pos.getZ(), this.amount);
+                    newOrb.setVelocity(newOrb.getVelocity().multiply(0.5));
                     world.spawnEntity(newOrb);
-                    newOrb.setVelocity(0, 0, 0);
                     remove();
                 }
             }
