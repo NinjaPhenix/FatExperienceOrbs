@@ -20,12 +20,6 @@ public abstract class ExperienceOrbEntityMixin extends Entity
     @Shadow
     public int amount;
 
-    @Shadow
-    public int health;
-
-    @Shadow
-    public int orbAge;
-
     public ExperienceOrbEntityMixin(EntityType<?> entityType_1, World world_1)
     {
         super(entityType_1, world_1);
