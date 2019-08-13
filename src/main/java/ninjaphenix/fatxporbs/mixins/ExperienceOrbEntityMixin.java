@@ -3,6 +3,7 @@ package ninjaphenix.fatxporbs.mixins;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.ExperienceOrbEntity;
+import net.minecraft.item.ExperienceBottleItem;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Box;
 import net.minecraft.world.World;
@@ -20,35 +21,26 @@ public abstract class ExperienceOrbEntityMixin extends Entity
     @Shadow
     public int amount;
 
+    @Shadow public int orbAge;
+
     public ExperienceOrbEntityMixin(EntityType<?> type, World world) { super(type, world); }
 
     @Inject(at = @At("TAIL"), method = "tick", cancellable = true)
     public void tick(CallbackInfo info)
     {
-        if (world.getTime() % 40 == 0 && !world.isClient)
+        if (world.getTime() % 5 == 0)
         {
             BlockPos pos = getBlockPos();
-            List<ExperienceOrbEntity> entities = world.getEntities(ExperienceOrbEntity.class,
-                    new Box(pos.west(2).north(2).up(2), pos.east(2).south(2).down(2)), (entity) -> !entity.removed);
-            if (entities.size() > 0)
+            ExperienceOrbEntity orb;
             {
-                int old = amount;
-                for (ExperienceOrbEntity entity : entities)
-                {
-                    if (entity.getEntityId() != this.getEntityId() && !entity.removed)
-                    {
-                        amount += entity.getExperienceAmount();
-                        entity.remove();
-                    }
-                }
-                if(amount != old)
-                {
-                    Entity newOrb = new ExperienceOrbEntity(world, pos.getX(), pos.getY(), pos.getZ(), amount);
-                    newOrb.setVelocity(newOrb.getVelocity().multiply(0.5));
-                    world.spawnEntity(newOrb);
-                    remove();
-                }
+                List<ExperienceOrbEntity> entities = world.getEntities(ExperienceOrbEntity.class,
+                        new Box(pos.west(2).north(2).up(2), pos.east(2).south(2).down(2)), e -> e.isAlive() && e.getUuid() != this.getUuid());
+                if(entities.size() > 0) orb = entities.get(0);
+                else return;
             }
+            amount += orb.getExperienceAmount();
+            orb.kill();
+            orbAge = 0;
         }
     }
 }
