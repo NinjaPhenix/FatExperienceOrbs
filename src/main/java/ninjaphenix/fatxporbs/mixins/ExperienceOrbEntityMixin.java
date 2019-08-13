@@ -29,13 +29,13 @@ public abstract class ExperienceOrbEntityMixin extends Entity
     {
         if (world.getTime() % 5 == 0)
         {
-            BlockPos pos = getBlockPos();
             ExperienceOrbEntity orb;
             {
+                BlockPos pos = getBlockPos();
                 List<ExperienceOrbEntity> entities = world.getEntities(ExperienceOrbEntity.class,
-                        new Box(pos.west(2).north(2).up(2), pos.east(2).south(2).down(2)), e -> e.isAlive() && e.getUuid() != this.getUuid());
-                if (entities.size() > 0) orb = entities.get(0);
-                else return;
+                        new Box(pos.west(2).north(2).up(2), pos.east(2).south(2).down(2)), e -> e.isAlive() && !e.getUuid().equals(uuid));
+                if(entities.isEmpty()) return;
+                orb = entities.get(0);
             }
             amount += orb.getExperienceAmount();
             orb.kill();
