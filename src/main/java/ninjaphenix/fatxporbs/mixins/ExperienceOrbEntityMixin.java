@@ -3,7 +3,6 @@ package ninjaphenix.fatxporbs.mixins;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.ExperienceOrbEntity;
-import net.minecraft.item.ExperienceBottleItem;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Box;
 import net.minecraft.world.World;
@@ -35,7 +34,7 @@ public abstract class ExperienceOrbEntityMixin extends Entity
             {
                 List<ExperienceOrbEntity> entities = world.getEntities(ExperienceOrbEntity.class,
                         new Box(pos.west(2).north(2).up(2), pos.east(2).south(2).down(2)), e -> e.isAlive() && e.getUuid() != this.getUuid());
-                if(entities.size() > 0) orb = entities.get(0);
+                if (entities.size() > 0) orb = entities.get(0);
                 else return;
             }
             amount += orb.getExperienceAmount();
