@@ -35,7 +35,7 @@ public abstract class ExperienceOrbEntityMixin extends Entity
             if (entities.isEmpty()) return;
             ExperienceOrbEntity orb = entities.get(0);
             amount += orb.getExperienceAmount();
-            orb.kill();
+            orb.remove();
             orbAge = 0;
         }
     }

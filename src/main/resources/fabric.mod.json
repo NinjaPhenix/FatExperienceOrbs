@@ -7,5 +7,5 @@
   "authors": [{"name":  "NinjaPhenix"}],
   "license": "MIT",
   "mixins": [{"config": "fatxporbs.mixins.json"}],
-  "depends": {"fabricloader": "*"}
+  "depends": {"fabricloader": ">=0.4.0"}
 }
