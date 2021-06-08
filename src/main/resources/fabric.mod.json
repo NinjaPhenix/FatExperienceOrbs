@@ -4,8 +4,19 @@
   "version": "${version}",
   "name": "Fat Experience Orbs",
   "description": "Makes Experience orbs combine together.",
-  "authors": [{"name":  "NinjaPhenix"}],
+  "authors": [
+    {
+      "name": "NinjaPhenix"
+    }
+  ],
   "license": "MIT",
-  "mixins": [{"config": "fatxporbs.mixins.json"}],
-  "depends": {"fabricloader": ">=0.4.0"}
+  "mixins": [
+    {
+      "config": "fatxporbs.mixins.json"
+    }
+  ],
+  "depends": {
+    "fabricloader": ">=0.11.3",
+    "minecraft": "~1.17"
+  }
 }
