@@ -1,50 +1,46 @@
 package ninjaphenix.fatxporbs.mixins;
 
-import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.ExperienceOrb;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.phys.AABB;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
-
-import java.util.List;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin(ExperienceOrb.class)
 public abstract class ExperienceOrbEntityMixin extends Entity {
-    //@Shadow
-    //private int health;
-    //@Shadow
-    //private int value;
+    @Shadow
+    private int count;
+
+    @Shadow
+    private int value;
+
+    @Shadow
+    protected abstract int repairPlayerItems(Player player, int i);
 
     public ExperienceOrbEntityMixin(final EntityType<?> type, final Level world) {
         super(type, world);
     }
 
-    //@Inject(at = @At("TAIL"), method = "tick()V", cancellable = true)
-    //private void tick(CallbackInfo info) {
-    //    if (level.isClientSide) {
-    //        return;
-    //    }
-    //    if (level.getGameTime() % 5 == 0) {
-    //        final BlockPos pos = blockPosition();
-    //        final List<ExperienceOrb> entities = level.getEntitiesOfClass(ExperienceOrb.class,
-    //                new AABB(pos.west(2).north(2).above(2), pos.east(2).south(2).below(2)), e -> e.isAlive() && !e.getUUID().equals(uuid));
-    //        if (entities.isEmpty()) {
-    //            return;
-    //        }
-    //        final ExperienceOrb orb = entities.get(0);
-    //        if (orb.getValue() + value < value) {
-    //            value = Integer.MAX_VALUE;
-    //        } else {
-    //            value += orb.getValue();
-    //        }
-    //        orb.remove(RemovalReason.DISCARDED);
-    //        health = 0;
-    //    }
-    //}
+    @Inject(at = @At("HEAD"), method = "canMerge(Lnet/minecraft/world/entity/ExperienceOrb;II)Z", cancellable = true)
+    private static void feo_canMerge(ExperienceOrb experienceOrb, int i, int j, CallbackInfoReturnable<Boolean> cir) {
+        cir.setReturnValue(!experienceOrb.isRemoved() && j == experienceOrb.getValue());
+    }
+
+    @Inject(method = "playerTouch(Lnet/minecraft/world/entity/player/Player;)V", at = @At("HEAD"))
+    private void feo_playerTouch(Player player, CallbackInfo ci) {
+        if (!this.level.isClientSide()) {
+            player.take(this, count);
+            int experience = this.repairPlayerItems(player, value * count);
+            if (experience > 0) {
+                player.giveExperiencePoints(experience);
+            }
+            this.discard();
+        }
+    }
 }
